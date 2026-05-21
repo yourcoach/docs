@@ -53,17 +53,17 @@ each load. Submit one entry per environment you plan to integrate from:
 
 - **Production** — every customer-facing origin that will embed the widget.
 - **Staging / Pre-production** — every pre-prod origin used for QA.
-- **Local development** *(optional)* — your loopback origin (e.g.
+- **Local development** _(optional)_ — your loopback origin (e.g.
   `http://localhost:1234`) if you need the widget to run against YourCoach
   during local integration work.
 
 ### Supported formats
 
-| Pattern | Matches | Example |
-| --- | --- | --- |
-| Exact origin | Single host, scheme, and port | `https://app.example.com` |
-| Wildcard subdomain | Any single-label subdomain of the parent domain | `https://*.example.com` |
-| Loopback with explicit port | Local dev server bound to a specific port | `http://localhost:1234` |
+| Pattern                     | Matches                                         | Example                   |
+| --------------------------- | ----------------------------------------------- | ------------------------- |
+| Exact origin                | Single host, scheme, and port                   | `https://app.example.com` |
+| Wildcard subdomain          | Any single-label subdomain of the parent domain | `https://*.example.com`   |
+| Loopback with explicit port | Local dev server bound to a specific port       | `http://localhost:1234`   |
 
 Scheme (`http` vs `https`) and port are both part of the origin —
 `http://localhost:3000` and `http://localhost:4000` are distinct entries and
@@ -77,11 +77,10 @@ ARNs:
 
 <Tabs>
 
-[//]: # (<Tab title="Development">)
+[//]: # '<Tab title="Development">'
+[//]: # "  `arn:aws:iam::343506163363:role/api-stage1-ECSTaskRole`"
+[//]: # "</Tab>"
 
-[//]: # (  `arn:aws:iam::343506163363:role/api-stage1-ECSTaskRole`)
-
-[//]: # (</Tab>)
   <Tab title="Staging / Pre-production" icon="flask">
     `arn:aws:iam::343506163363:role/api-rc-ECSTaskRole`
   </Tab>

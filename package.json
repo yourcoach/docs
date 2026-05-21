@@ -6,7 +6,7 @@
   "scripts": {
     "format": "prettier --write '**/*.{mdx,json}'",
     "format:check": "prettier --check '**/*.{mdx,json}'",
-    "links": "mint links",
+    "links": "mint broken-links",
     "dev": "mint dev",
     "changeset": "pnpx @changesets/cli",
     "bump-version": "pnpx @changesets/cli version"

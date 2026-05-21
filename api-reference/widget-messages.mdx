@@ -98,8 +98,8 @@ export type WidgetApiLoginParams = {
 
 ### WidgetApiSignupParams
 
-Payload for the [`SIGNUP`](#cwsignupmessage-signup) message. `userInfo` is required.
-Used in the [widget integration handshake](/widget/integration).
+Payload for the [`SIGNUP`](#cwsignupmessage-signup) message. `userInfo` is
+required. Used in the [widget integration handshake](/widget/integration).
 
 ```ts
 export type WidgetApiSignupParams = {
@@ -114,8 +114,8 @@ export type WidgetApiSignupParams = {
 
 ### ExternalAuthError
 
-Error payload attached to the [`AUTH_ERROR`](#cwautherrormessage-auth-error) outgoing
-event.
+Error payload attached to the [`AUTH_ERROR`](#cwautherrormessage-auth-error)
+outgoing event.
 
 ```ts
 type ErrorCode = "UNKNOWN_ERROR" | "USER_DOES_NOT_EXIST"
