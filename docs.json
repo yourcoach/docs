@@ -9,7 +9,7 @@
   },
   "contextual": {
     "display": "header",
-    "options": ["copy", "view", "chatgpt", "claude", "assistant"]
+    "options": ["copy", "view", "chatgpt", "claude"]
   },
   "favicon": "/favicon.png",
   "navigation": {

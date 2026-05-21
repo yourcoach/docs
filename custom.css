@@ -11,3 +11,8 @@
     max-height: 30px !important;
   }
 }
+
+#assistant-entry,
+.chat-assistant-floating-input {
+  display: none !important;
+}
