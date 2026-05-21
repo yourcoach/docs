@@ -69,8 +69,8 @@
     ]
   },
   "logo": {
-    "light": "/logo/yc-text-logo.svg",
-    "dark": "/logo/yc-text-logo.svg"
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
   },
   "navbar": {
     "links": []

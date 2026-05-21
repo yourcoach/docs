@@ -1,0 +1,13 @@
+/* Logo size override */
+.nav-logo {
+  height: 48px !important;
+  max-height: 48px !important;
+  width: auto !important;
+}
+
+@media (max-width: 768px) {
+  .nav-logo {
+    height: 30px !important;
+    max-height: 30px !important;
+  }
+}
