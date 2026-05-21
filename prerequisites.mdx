@@ -9,10 +9,10 @@ icon: "list-check"
 Before starting the technical integration, ensure that the following
 administrative requirements are completed.
 
-<Info>
+<Check>
   Contact YourCoach to request your `clientId`, `clientSecret`, and
   environment-specific AWS Role ARNs before beginning.
-</Info>
+</Check>
 
 ## API credentials
 
@@ -44,8 +44,10 @@ authenticity of this token by verifying its cryptographic signature:
 
 ## Host page whitelisting
 
-Provide YourCoach with the exact page URL where the iFrame widget will be
-embedded.
+<Check>
+    Provide YourCoach with the exact page URL where the iFrame widget will be
+    embedded.
+</Check>
 
 ## SFTP and S3 bucket whitelisting
 
@@ -54,13 +56,16 @@ to its shared S3 bucket (or supply SFTP credentials) for the following AWS Role
 ARNs:
 
 <Tabs>
-  <Tab title="Development">
-    `arn:aws:iam::343506163363:role/api-stage1-ECSTaskRole`
-  </Tab>
-  <Tab title="Staging / Pre-production">
+
+[//]: # (<Tab title="Development">)
+
+[//]: # (  `arn:aws:iam::343506163363:role/api-stage1-ECSTaskRole`)
+
+[//]: # (</Tab>)
+  <Tab title="Staging / Pre-production" icon="flask">
     `arn:aws:iam::343506163363:role/api-rc-ECSTaskRole`
   </Tab>
-  <Tab title="Production">
+  <Tab title="Production" icon="rocket">
     `arn:aws:iam::343506163363:role/api-prod-ECSTaskRole`
   </Tab>
 </Tabs>

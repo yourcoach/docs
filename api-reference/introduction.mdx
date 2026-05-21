@@ -14,19 +14,14 @@ All backend communication uses a JSON-RPC-like POST format.
 
 Select the appropriate base URL for your deployment environment:
 
-<CardGroup cols={2}>
-  <Card
-    title="Staging / Pre-production"
-    icon="flask"
-    href="https://api.rc.yourcoach.health"
-  >
-    `https://api.rc.yourcoach.health`
-  </Card>
-  <Card
-    title="Development"
-    icon="code"
-    href="https://api.stage1.yourcoach.health"
-  >
-    `https://api.stage1.yourcoach.health`
-  </Card>
-</CardGroup>
+<Icon icon="flask" /> **Staging / Pre-production**
+
+```bash
+https://api.rc.yourcoach.health
+```
+
+<Icon icon="rocket" /> **Production**
+
+```bash
+https://api.yourcoach.health
+```
