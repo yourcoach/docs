@@ -82,7 +82,7 @@ export type ExternalAuthUserInfo = {
 
 ### WidgetApiLoginParams
 
-Payload for the [`LOGIN`](#cwloginmessage) message. Used in the
+Payload for the [`LOGIN`](#cwloginmessage-login) message. Used in the
 [widget integration handshake](/widget/integration).
 
 ```ts
@@ -98,7 +98,7 @@ export type WidgetApiLoginParams = {
 
 ### WidgetApiSignupParams
 
-Payload for the [`SIGNUP`](#cwsignupmessage) message. `userInfo` is required.
+Payload for the [`SIGNUP`](#cwsignupmessage-signup) message. `userInfo` is required.
 Used in the [widget integration handshake](/widget/integration).
 
 ```ts
@@ -114,7 +114,7 @@ export type WidgetApiSignupParams = {
 
 ### ExternalAuthError
 
-Error payload attached to the [`AUTH_ERROR`](#cwauthErrormessage) outgoing
+Error payload attached to the [`AUTH_ERROR`](#cwautherrormessage-auth-error) outgoing
 event.
 
 ```ts
