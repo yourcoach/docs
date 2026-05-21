@@ -45,9 +45,29 @@ authenticity of this token by verifying its cryptographic signature:
 ## Host page whitelisting
 
 <Check>
-    Provide YourCoach with the exact page URL where the iFrame widget will be
-    embedded.
+  Provide YourCoach with every origin where the widget iFrame will be embedded.
 </Check>
+
+The host origin is validated against the widget's `frame-ancestors` policy on
+each load. Submit one entry per environment you plan to integrate from:
+
+- **Production** — every customer-facing origin that will embed the widget.
+- **Staging / Pre-production** — every pre-prod origin used for QA.
+- **Local development** *(optional)* — your loopback origin (e.g.
+  `http://localhost:1234`) if you need the widget to run against YourCoach
+  during local integration work.
+
+### Supported formats
+
+| Pattern | Matches | Example |
+| --- | --- | --- |
+| Exact origin | Single host, scheme, and port | `https://app.example.com` |
+| Wildcard subdomain | Any single-label subdomain of the parent domain | `https://*.example.com` |
+| Loopback with explicit port | Local dev server bound to a specific port | `http://localhost:1234` |
+
+Scheme (`http` vs `https`) and port are both part of the origin —
+`http://localhost:3000` and `http://localhost:4000` are distinct entries and
+must each be submitted if both are used.
 
 ## SFTP and S3 bucket whitelisting
 
