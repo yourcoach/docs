@@ -7,40 +7,17 @@ icon: "chart-line"
 ---
 
 YourCoach exports daily, weekly, and monthly analytical spreadsheets to the
-Company S3 or SFTP directory to monitor participation and billing cycles.
+Company S3 or SFTP directory to monitor participation and billing cycles. See
+[SFTP and S3 bucket whitelisting](/prerequisites#sftp-and-s3-bucket-whitelisting)
+for setup requirements.
 
-<AccordionGroup>
-  <Accordion title="program_pair — Daily">
-    Displays current program lifecycle statuses and coach pairings.
-  </Accordion>
-
-<Accordion title="sessions — Daily">
-  Complete data log of scheduled, missed, and attended live video sessions.
-</Accordion>
-
-<Accordion title="chat_transcript_data — Daily">
-  Message-level text transcript logs separated by user/coach roles.
-</Accordion>
-
-<Accordion title="course_restart_dates — Daily">
-  Log of all programs that were renewed, extended, or restarted on this day.
-</Accordion>
-
-<Accordion title="coaching_engagement — Weekly">
-  Summarizes sessions, missed meetings, and message exchange volumes.
-</Accordion>
-
-<Accordion title="coaching_program_summary — Weekly">
-  High-level overview: total enrolled users, total sessions, and program
-  duration.
-</Accordion>
-
-<Accordion title="client_billing_reconciliation — Monthly">
-  Comprehensive billing details (new enrolments, re-enrolments, active billing
-  cycles).
-</Accordion>
-
-  <Accordion title="sessions_and_program_cycles — Monthly">
-    Structural logging of session allocations mapped to specific program cycles.
-  </Accordion>
-</AccordionGroup>
+| Report | Frequency | Description |
+| --- | --- | --- |
+| `program_pair` | Daily | Displays current program lifecycle statuses and coach pairings. |
+| `sessions` | Daily | Complete data log of scheduled, missed, and attended live video sessions. |
+| `chat_transcript_data` | Daily | Message-level text transcript logs separated by user/coach roles. |
+| `course_restart_dates` | Daily | Log of all programs that were renewed, extended, or restarted on this day. |
+| `coaching_engagement` | Weekly | Summarizes sessions, missed meetings, and message exchange volumes. |
+| `coaching_program_summary` | Weekly | High-level overview: total enrolled users, total sessions, and program duration. |
+| `client_billing_reconciliation` | Monthly | Comprehensive billing details (new enrolments, re-enrolments, active billing cycles). |
+| `sessions_and_program_cycles` | Monthly | Structural logging of session allocations mapped to specific program cycles. |
