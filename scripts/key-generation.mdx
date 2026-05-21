@@ -1,0 +1,61 @@
+---
+title: "Public/private key generation"
+description: "Node.js script to generate an RSA key pair for JWT signing."
+icon: "key-skeleton"
+---
+
+Run the script below to generate an RSA 2048-bit private/public key pair. Pass
+the desired key name as a command-line argument.
+
+<Warning>
+  Running this script deletes and recreates the `./keys` directory. Back up any
+  existing key files before running.
+</Warning>
+
+```js
+#!/usr/bin/env node
+/* eslint-disable no-console */
+const crypto = require("crypto")
+const fs = require("fs")
+const path = require("path")
+const keyName = process.argv[2]
+
+async function generateKeyPair() {
+  try {
+    const { publicKey, privateKey } = crypto.generateKeyPairSync("rsa", {
+      modulusLength: 2048,
+      publicKeyEncoding: {
+        type: "spki",
+        format: "pem",
+      },
+      privateKeyEncoding: {
+        type: "pkcs8",
+        format: "pem",
+      },
+    })
+
+    const KEYS_PATH = "./keys"
+    if (fs.existsSync(path.resolve(KEYS_PATH))) {
+      fs.rmdirSync(path.resolve(KEYS_PATH), { recursive: true })
+    }
+    fs.mkdirSync(path.resolve(KEYS_PATH), { recursive: true })
+
+    fs.writeFileSync(
+      path.resolve(`${KEYS_PATH}/${keyName}.public.pem`),
+      publicKey,
+    )
+    fs.writeFileSync(
+      path.resolve(`${KEYS_PATH}/${keyName}.private.pem`),
+      privateKey,
+    )
+
+    console.log(
+      `${keyName}.public.pem and ${keyName}.private.pem have been successfully generated!`,
+    )
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+generateKeyPair()
+```

@@ -1,0 +1,73 @@
+---
+title: "Eligibility events webhook"
+description:
+  "user.hooks.eligibility — communicate changes in a user's subscription or
+  contract state."
+icon: "webhook"
+---
+
+Communicates changes in a user's subscription or contract state to suspend,
+cancel, restart, or alter renewal options on their active coaching program.
+
+**Method:** `user.hooks.eligibility`
+
+## Request parameters
+
+<ParamField body="client_id" type="string" required>
+  Your company client identifier.
+</ParamField>
+
+<ParamField body="client_secret" type="string" required>
+  Your company client secret.
+</ParamField>
+
+<ParamField body="token" type="string" required>
+  Signed authorization JWT for the target user. See [JWT
+  generation](/scripts/jwt-generation).
+</ParamField>
+
+<ParamField body="event" type="object" required>
+  The eligibility state change event.
+
+  <Expandable title="event fields">
+    <ParamField body="eligibility" type="string" required>
+      The eligibility action to apply. Accepted values: `stop_now` | `stop_renewal` | `restart_now` | `restart_renewal`
+    </ParamField>
+
+    <ParamField body="generated_at" type="string" required>
+      ISO 8601 timestamp of when the event was generated (e.g., `"2024-02-02T12:00:00Z"`).
+    </ParamField>
+
+    <ParamField body="description" type="string" required>
+      Human-readable description of the eligibility change.
+    </ParamField>
+
+    <ParamField body="reason" type="string" required>
+      Machine-readable reason code. Common values: `subscription_canceled` | `failed_payment` | `refund_requested` | `subscription_restarted` | `user_fired` | `fraud_detected` | `refunded` | `account_deleted` | `trial_expired`
+    </ParamField>
+
+  </Expandable>
+</ParamField>
+
+<Expandable title="Full request example">
+  ```json
+  {
+    "id": 5,
+    "meta": {
+      "version": [10, 1]
+    },
+    "method": "user.hooks.eligibility",
+    "params": {
+      "client_id": "test_client_id",
+      "client_secret": "AM300x9zUfBLQTRICC",
+      "token": "eyJ0eXAi0iJKV1QiLCJhbGci0iJSUzI1NiJ9.eyJ1c2VyX2lkIjou_UKqPkI",
+      "event": {
+        "eligibility": "stop_now",
+        "generated_at": "2024-02-02T12:00:00Z",
+        "description": "User canceled the subscription",
+        "reason": "subscription_canceled"
+      }
+    }
+  }
+  ```
+</Expandable>

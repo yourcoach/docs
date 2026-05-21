@@ -1,0 +1,232 @@
+---
+title: "Widget message protocol"
+sidebarTitle: "Widget protocol"
+description:
+  "Full TypeScript type reference for the bidirectional cross-window message
+  protocol between the host page and the YourCoach widget."
+icon: "code-merge"
+---
+
+The YourCoach widget communicates with its host page over the HTML5
+`postMessage` API using a typed cross-window message protocol. This page is the
+canonical TypeScript reference for every message and payload type in that
+protocol.
+
+For usage examples see [Widget integration](/widget/integration) (embed +
+handshake flow) and [Handling widget events](/widget/events) (host-side listener
+pattern).
+
+## Message type unions
+
+```ts
+export type IncomingCrossWindowMessage =
+  | CWLoginMessage
+  | CWSetStringMessage
+  | CWShortLinkLoginMessage
+  | CWSignupMessage
+
+export type OutgoingCrossWindowMessage =
+  | CWAuthErrorMessage
+  | CWAuthSuccessMessage
+  | CWTermsDeclinedMessage
+```
+
+## Base type
+
+### CrossWindowMessage
+
+Every message interface extends this base type.
+
+```ts
+export interface CrossWindowMessage {
+  payload?: Record<string, unknown>
+  type: string
+}
+```
+
+## Shared payload types
+
+### ExternalAuthUserInfo
+
+Carries the user's demographic profile and additional intake data. Used by
+[`WidgetApiSignupParams`](#widgetapisignupparams) and optionally by
+[`WidgetApiLoginParams`](#widgetapiloginparams).
+
+```ts
+export type ExternalAuthUserInfo = {
+  additionalData: { answer: string[]; question: string }[]
+  coachReason: null | { [key: string]: any }[]
+  demographics: {
+    date_of_birth:
+      | null
+      | string
+      | {
+          _type: "date"
+          day: number
+          month: number
+          year: number
+        }
+    email: null | string
+    firstName: null | string
+    gender: "female" | "male" | "na" | "unknown" | null
+    lastName: null | string
+    phone: null | string
+    state: null | string
+    timezone: null | string
+    zipcode: null | string
+  }
+  partner_id: null | string
+  population_ids?: string[]
+}
+```
+
+### WidgetApiLoginParams
+
+Payload for the [`LOGIN`](#cwloginmessage) message. Used in the
+[widget integration handshake](/widget/integration).
+
+```ts
+export type WidgetApiLoginParams = {
+  api?: "core"
+  appId?: string
+  clientId: string
+  clientSecret: string
+  token: string
+  userInfo?: ExternalAuthUserInfo
+}
+```
+
+### WidgetApiSignupParams
+
+Payload for the [`SIGNUP`](#cwsignupmessage) message. `userInfo` is required.
+Used in the [widget integration handshake](/widget/integration).
+
+```ts
+export type WidgetApiSignupParams = {
+  api?: "core"
+  appId?: string
+  clientId: string
+  clientSecret: string
+  token: string
+  userInfo: ExternalAuthUserInfo
+}
+```
+
+### ExternalAuthError
+
+Error payload attached to the [`AUTH_ERROR`](#cwauthErrormessage) outgoing
+event.
+
+```ts
+type ErrorCode = "UNKNOWN_ERROR" | "USER_DOES_NOT_EXIST"
+
+export type ExternalAuthError = {
+  code: ErrorCode
+  message: string
+  name: string
+}
+```
+
+## Incoming messages (host → widget)
+
+Messages sent by the host page to control or initialize the widget. See
+[widget integration](/widget/integration) for full payload examples.
+
+<AccordionGroup>
+  <Accordion title="CWSignupMessage — SIGNUP">
+    Initiates a new user registration flow inside the widget. `userInfo` is required and must include the full demographic profile.
+
+    ```ts
+    interface CWSignupMessage extends CrossWindowMessage {
+      payload: WidgetApiSignupParams;
+      type: 'SIGNUP';
+    }
+    ```
+
+  </Accordion>
+
+  <Accordion title="CWLoginMessage — LOGIN">
+    Opens the widget for an already-enrolled user, bypassing the registration flow. `userInfo` is optional.
+
+    ```ts
+    interface CWLoginMessage extends CrossWindowMessage {
+      payload: WidgetApiLoginParams;
+      type: 'LOGIN';
+    }
+    ```
+
+  </Accordion>
+
+  <Accordion title="CWShortLinkLoginMessage — SHORT_LINK_LOGIN">
+    Authenticates a user via a short-link slug rather than a full JWT payload.
+
+    ```ts
+    interface CWShortLinkLoginMessage extends CrossWindowMessage {
+      payload: {
+        shortLinkSlug: string;
+      };
+      type: 'SHORT_LINK_LOGIN';
+    }
+    ```
+
+  </Accordion>
+
+  <Accordion title="CWSetStringMessage — SET_ACCENT_COLOR">
+    Sets a custom accent color inside the widget UI at runtime. Pass a CSS color string as `value`.
+
+    ```ts
+    type CWSetStringMessageType = 'SET_ACCENT_COLOR';
+
+    interface CWSetStringMessage extends CrossWindowMessage {
+      payload: {
+        value: string;
+      };
+      type: CWSetStringMessageType;
+    }
+    ```
+
+  </Accordion>
+</AccordionGroup>
+
+## Outgoing events (widget → host)
+
+Events fired by the widget that the host page should subscribe to. See
+[handling widget events](/widget/events) for the listener pattern.
+
+<AccordionGroup>
+  <Accordion title="CWAuthErrorMessage — AUTH_ERROR">
+    Fired when the handshake fails. Inspect `payload.error.code` — if `'USER_DOES_NOT_EXIST'`, fall back to the SIGNUP flow.
+
+    ```ts
+    interface CWAuthErrorMessage extends CrossWindowMessage {
+      payload: {
+        error: ExternalAuthError;
+      };
+      type: 'AUTH_ERROR';
+    }
+    ```
+
+  </Accordion>
+
+  <Accordion title="CWAuthSuccessMessage — AUTH_SUCCESS">
+    Fired when the user session is established successfully inside the widget.
+
+    ```ts
+    interface CWAuthSuccessMessage extends CrossWindowMessage {
+      type: 'AUTH_SUCCESS';
+    }
+    ```
+
+  </Accordion>
+
+  <Accordion title="CWTermsDeclinedMessage — TERMS_DECLINED">
+    Fired when a user declines the YourCoach terms of service.
+
+    ```ts
+    interface CWTermsDeclinedMessage extends CrossWindowMessage {
+      type: 'TERMS_DECLINED';
+    }
+    ```
+
+  </Accordion>
+</AccordionGroup>

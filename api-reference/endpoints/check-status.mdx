@@ -1,0 +1,64 @@
+---
+title: "Check program status"
+description:
+  "user.auth.check_status — query the real-time coaching enrollment state for a
+  user."
+icon: "magnifying-glass"
+---
+
+Queries the real-time coaching enrollment state for the target user (e.g., new
+user, in-progress, extended, archived).
+
+**Method:** `user.auth.check_status`
+
+## Request parameters
+
+<ParamField body="client_id" type="string" required>
+  Your company client identifier.
+</ParamField>
+
+<ParamField body="client_secret" type="string" required>
+  Your company client secret.
+</ParamField>
+
+<ParamField body="token" type="string" required>
+  Signed authorization JWT for the target user. See [JWT
+  generation](/scripts/jwt-generation).
+</ParamField>
+
+<Expandable title="Full request example">
+  ```json
+  {
+    "id": 4,
+    "meta": {
+      "version": [10, 1]
+    },
+    "method": "user.auth.check_status",
+    "params": {
+      "client_id": "test_client_id",
+      "client_secret": "AM300x9zULYfBLQTRICC",
+      "token": "eyJ0eXA101JKV1QiLCJhbGci0iJSUzI1NiJ9.eyJ1c2VyX21kIjo... u_UKqPkI"
+    }
+  }
+  ```
+</Expandable>
+
+## Error response
+
+```json
+{
+  "id": 4,
+  "meta": {},
+  "result": null,
+  "error": {
+    "code": "error.resource.invalid_context",
+    "message": "Invalid context",
+    "data": {
+      "reason": "The client_id/client_secret combination is invalid",
+      "method": "user.auth.check_status",
+      "version": [10, 1]
+    }
+  },
+  "warnings": []
+}
+```

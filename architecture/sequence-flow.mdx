@@ -1,0 +1,40 @@
+---
+title: "Sequence flow diagram"
+description:
+  "End-to-end integration flow from widget open through token exchange, user
+  session, and chat display."
+icon: "diagram-project"
+---
+
+The diagram below illustrates the full request sequence from widget open through
+YourCoach backend processing and chat display.
+
+```mermaid
+sequenceDiagram
+    actor Client as External Client
+    participant Web as Company Website
+    participant Widget as Widget (React)
+    participant Backend as YourCoach Backend
+
+    Client->>Web: Open widget screen
+    Web->>Widget: Pass parameters<br/>(client_id, token, user_info, action)
+    Widget->>Backend: Token exchange API call
+
+    Backend->>Backend: Validate credentials
+    Backend->>Backend: Validate JWT signature
+    Backend->>Backend: Extract user details
+
+    alt action == "signup"
+        Backend->>Backend: Create user
+        Backend->>Backend: Save treatment plan
+        Backend->>Backend: Auto-match coach
+    else action == "login"
+        Backend->>Backend: Get user session
+    end
+
+    Backend->>Widget: Issue Access Token (AT1) & Refresh Token (RT1)
+    Widget->>Backend: GET Chat List (with AT1)
+    Backend->>Backend: Validate AT1 & fetch chat history
+    Backend->>Widget: Display chat
+    Widget->>Client: Render screen
+```

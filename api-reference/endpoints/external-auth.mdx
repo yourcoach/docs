@@ -1,0 +1,130 @@
+---
+title: "Direct user authorization"
+description:
+  "user.auth.external_auth — register a user and activate their coaching program
+  on the backend without UI."
+icon: "key"
+---
+
+Allows direct registration of a user and activation of their coaching program
+strictly on the backend, without prompting any UI widgets.
+
+**Method:** `user.auth.external_auth`
+
+## Request parameters
+
+<ParamField body="client_id" type="string" required>
+  Your company client identifier.
+</ParamField>
+
+<ParamField body="client_secret" type="string" required>
+  Your company client secret.
+</ParamField>
+
+<ParamField body="token" type="string" required>
+  Signed authorization JWT for the target user. See [JWT
+  generation](/scripts/jwt-generation).
+</ParamField>
+
+<ParamField body="action" type="string" required>
+  Always `"register"` for new user enrollment.
+</ParamField>
+
+<ParamField body="device" type="string" required>
+  Browser User-Agent string of the client device.
+</ParamField>
+
+<ParamField body="push_token" type="string | null">
+  Device push notification token, or `null` if not available.
+</ParamField>
+
+<ParamField body="population_ids" type="string[]">
+  Optional list of population segment identifiers.
+</ParamField>
+
+<ParamField body="app_id" type="string">
+  Optional app identifier for multi-app setups.
+</ParamField>
+
+<ParamField body="user_info" type="object" required>
+  User profile and demographic information.
+
+  <Expandable title="user_info fields">
+    <ParamField body="partner_id" type="string" required>
+      Your company's internal user identifier.
+    </ParamField>
+
+    <ParamField body="demographics" type="object" required>
+      User demographic data.
+
+      <Expandable title="demographics fields">
+        <ParamField body="first_name" type="string" required>First name.</ParamField>
+        <ParamField body="last_name" type="string" required>Last name.</ParamField>
+        <ParamField body="email" type="string" required>Email address.</ParamField>
+        <ParamField body="date_of_birth" type="string">Date of birth in `YYYY-MM-DD` format.</ParamField>
+        <ParamField body="gender" type="string">Accepted values: `"female"` | `"male"` | `"na"` | `null`</ParamField>
+        <ParamField body="phone" type="string | null">Phone number in E.164 format.</ParamField>
+        <ParamField body="state" type="string">Two-letter US state code.</ParamField>
+        <ParamField body="zipcode" type="string">ZIP code.</ParamField>
+      </Expandable>
+    </ParamField>
+
+    <ParamField body="additional_data" type="object[]">
+      Optional array of question/answer pairs for coach-matching intake.
+
+      <Expandable title="additional_data item fields">
+        <ParamField body="question" type="string" required>The intake question text.</ParamField>
+        <ParamField body="answer" type="string" required>The user's answer.</ParamField>
+      </Expandable>
+    </ParamField>
+
+  </Expandable>
+</ParamField>
+
+<Expandable title="Full request example">
+  ```json
+  {
+    "id": 14,
+    "meta": {},
+    "version": [10, 1],
+    "method": "user.auth.external_auth",
+    "params": {
+      "client_id": "test_client_id",
+      "client_secret": "AM300x9zULYfBLQTRICC",
+      "token": "eyJ0eXAi0iJKV1QiLCJhbGci0iJSUzI1NiJ9.eyJ1c2VyX2lkIjo... u_UKqPkI",
+      "action": "register",
+      "device": "Browser User-Agent String",
+      "push_token": null,
+      "population_ids": ["dei_ppl", "african_american_ppl"],
+      "app_id": "some_app_id",
+      "user_info": {
+        "partner_id": "19",
+        "demographics": {
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": "johndoe@example.com",
+          "phone": null,
+          "state": "CA",
+          "zipcode": "12345",
+          "date_of_birth": null,
+          "gender": "female"
+        },
+        "additional_data": [
+          {
+            "question": "How ready are you to make changes to your health?",
+            "answer": "Very"
+          },
+          {
+            "question": "Please share any health-related concerns or additional details that you would like to share with your coach. If none, just write \"none\".",
+            "answer": "None"
+          },
+          {
+            "question": "Before I can connect you with a coach, I need your permission to share your information along with your agreement to the coaching terms and conditions. Let's review the health disclosure first.",
+            "answer": "Sounds good, let's review"
+          }
+        ]
+      }
+    }
+  }
+  ```
+</Expandable>

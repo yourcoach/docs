@@ -1,0 +1,37 @@
+---
+title: "JWT generation"
+description:
+  "TypeScript example for generating a signed authorization JWT for a user."
+icon: "key"
+---
+
+Use the `jose` library to sign a JWT with your RSA private key. The token
+payload contains the user's ID and expires after 1 minute.
+
+<Warning>
+  Never hardcode the private key in source code. Load it from a secret manager
+  or environment variable at runtime.
+</Warning>
+
+```ts
+import * as jose from "jose"
+
+const PRIVATE_KEY = `-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAOIBAQDpWPDVuo@wriaC\n/ZdsbaxR1rhd5G14QEf2FQBq\n-----END PRIVATE KEY-----`
+
+export const generateAuthToken = async (userId: string) => {
+  try {
+    const alg = "RS256"
+    const privateKey = await jose.importPKCS8(PRIVATE_KEY, alg)
+    const jwt = await new jose.SignJWT({ user_id: userId })
+      .setProtectedHeader({ alg })
+      .setIssuedAt()
+      .setIssuer("Your Company")
+      .setExpirationTime("1m")
+      .sign(privateKey)
+
+    return jwt
+  } catch (error) {
+    throw error
+  }
+}
+```

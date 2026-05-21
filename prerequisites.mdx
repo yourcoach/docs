@@ -1,0 +1,71 @@
+---
+title: "Prerequisites & administrative setup"
+description:
+  "Administrative requirements that must be completed before starting the
+  technical integration."
+icon: "list-check"
+---
+
+Before starting the technical integration, ensure that the following
+administrative requirements are completed.
+
+<Info>
+  Contact YourCoach to request your `clientId`, `clientSecret`, and
+  environment-specific AWS Role ARNs before beginning.
+</Info>
+
+## API credentials
+
+Request a unique `clientId` and `clientSecret` from YourCoach. This pair
+uniquely identifies your company application and is mandatory for API handshake
+processes.
+
+## Security keys & JWT setup
+
+The YourCoach widget requires a JSON Web Token (JWT, RFC 7519) to securely map
+your active session user to a YourCoach session. YourCoach validates the
+authenticity of this token by verifying its cryptographic signature:
+
+<Steps>
+  <Step title="Generate an RSA key pair">
+    Generate an RSA private/public key pair on your infrastructure. See [key
+    generation script](/scripts/key-generation).
+  </Step>
+  <Step title="Share the public key">
+    Provide the generated public key to YourCoach. Keep the private key secure
+    on your server.
+  </Step>
+  <Step title="Sign JWTs on each request">
+    During user authorization, generate a signed JWT containing the user's ID
+    using your private key. See [JWT generation
+    script](/scripts/jwt-generation).
+  </Step>
+</Steps>
+
+## Host page whitelisting
+
+Provide YourCoach with the exact page URL where the iFrame widget will be
+embedded.
+
+## SFTP and S3 bucket whitelisting
+
+To enable secure automated report sharing, the Company must allow write access
+to its shared S3 bucket (or supply SFTP credentials) for the following AWS Role
+ARNs:
+
+<Tabs>
+  <Tab title="Development">
+    `arn:aws:iam::343506163363:role/api-stage1-ECSTaskRole`
+  </Tab>
+  <Tab title="Staging / Pre-production">
+    `arn:aws:iam::343506163363:role/api-rc-ECSTaskRole`
+  </Tab>
+  <Tab title="Production">
+    `arn:aws:iam::343506163363:role/api-prod-ECSTaskRole`
+  </Tab>
+</Tabs>
+
+<Warning>
+  S3 bucket names and SFTP credentials MUST be completely unique for each
+  environment to preserve data isolation.
+</Warning>

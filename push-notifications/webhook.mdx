@@ -1,0 +1,79 @@
+---
+title: "Push notification webhook"
+description:
+  "Requirements and payload structure for receiving push notifications from
+  YourCoach."
+icon: "webhook"
+---
+
+To receive downstream push notifications triggered by active coaching sessions,
+Company must implement a secure POST API on their server.
+
+## Setup
+
+<Steps>
+  <Step title="Expose a POST endpoint">
+    Implement a secure HTTPS POST endpoint on your server to receive incoming
+    webhook payloads from YourCoach.
+  </Step>
+  <Step title="Provide the endpoint URL">
+    Share the target URL with YourCoach so it can be registered as your webhook
+    destination.
+  </Step>
+  <Step title="Provide authorization header credentials">
+    Supply a header name and a matching secret key. YourCoach will include this
+    header in every webhook request for payload authentication.
+  </Step>
+</Steps>
+
+## Payload fields
+
+<ResponseField name="app_ids" type="string[]" required>
+  List of app identifiers the notification targets.
+</ResponseField>
+
+<ResponseField name="events" type="object[]" required>
+  Array of notification event objects.
+
+  <Expandable title="Event object fields">
+    <ResponseField name="user_id" type="string" required>
+      The user's platform identifier.
+    </ResponseField>
+    <ResponseField name="name" type="string" required>
+      The event type. See [supported events](/push-notifications/events).
+    </ResponseField>
+    <ResponseField name="time" type="string" required>
+      ISO 8601 timestamp of when the event occurred.
+    </ResponseField>
+    <ResponseField name="properties" type="object">
+      Event-specific metadata (e.g., `title` and `message` for `yc_post_created`).
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+## Example
+
+<CodeGroup>
+  ```http Headers
+  Your-Configured-Header-Name: secret_api_key
+  Content-Type: application/json
+  ```
+
+```json Body
+{
+  "app_ids": ["app1_id", "app2_id"],
+  "events": [
+    {
+      "user_id": "9876543",
+      "name": "yc_post_created",
+      "time": "2026-01-20T12:00:05",
+      "properties": {
+        "title": "Message title",
+        "message": "Message body"
+      }
+    }
+  ]
+}
+```
+
+</CodeGroup>

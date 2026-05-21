@@ -1,33 +1,32 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: "Backend API reference"
+description: "All backend communication utilizes a JSON-RPC-like POST format."
+icon: "book"
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+All backend communication uses a JSON-RPC-like POST format.
 
-## Welcome
+<Info>
+  Each request body must include `id`, `meta`, `method`, and `params`. The
+  `method` value identifies the specific API operation (e.g.,
+  `user.auth.check_status`).
+</Info>
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Select the appropriate base URL for your deployment environment:
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
-
-## Authentication
-
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
-
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+<CardGroup cols={2}>
+  <Card
+    title="Staging / Pre-production"
+    icon="flask"
+    href="https://api.rc.yourcoach.health"
+  >
+    `https://api.rc.yourcoach.health`
+  </Card>
+  <Card
+    title="Development"
+    icon="code"
+    href="https://api.stage1.yourcoach.health"
+  >
+    `https://api.stage1.yourcoach.health`
+  </Card>
+</CardGroup>

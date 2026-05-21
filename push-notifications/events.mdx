@@ -1,0 +1,40 @@
+---
+title: "Supported notification events"
+description:
+  "All push notification event types emitted by the YourCoach platform."
+icon: "bell-on"
+---
+
+<AccordionGroup>
+  <Accordion title="Coaching sessions">
+    | System name (`name`) | Description / trigger case |
+    |---|---|
+    | `yc_conference_scheduled` | A virtual coaching session has been booked |
+    | `yc_conference_resheduled` | A session has been moved to a different time |
+    | `yc_user_canceled_session` | The scheduled session was cancelled by the user |
+    | `yc_conference_upcoming_24hr` | Reminder alert triggered 24 hours prior to starting |
+    | `yc_conference_upcoming_1hr` | Reminder alert triggered 1 hour prior to starting |
+    | `yc_conference_starting` | The video/audio session is starting now |
+    | `yc_conference_reminder` | Follow-up reminder if user has not joined after 5 minutes |
+  </Accordion>
+
+<Accordion title="Messaging chat">
+  | System name (`name`) | Description / trigger case | |---|---| |
+  `yc_post_created` | The assigned health coach submits a message to the chat |
+</Accordion>
+
+<Accordion title="Re-engagement">
+  | System name (`name`) | Description / trigger case | |---|---| |
+  `yc_membership_10d_no_activity` | Triggered if the user has shown no platform
+  activity for 10 days | | `yc_membership_20d_no_activity` | Triggered if the
+  user has shown no platform activity for 20 days | |
+  `yc_conference_5d_no_activity` | Triggered if there is no activity for 5 days
+  after a session |
+</Accordion>
+
+  <Accordion title="Renewal">
+    | System name (`name`) | Description / trigger case |
+    |---|---|
+    | `yc_course_extended` | Coaching program duration is renewed / extended |
+  </Accordion>
+</AccordionGroup>

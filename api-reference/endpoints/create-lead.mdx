@@ -1,0 +1,107 @@
+---
+title: "Create prospective lead"
+description:
+  "public.leads.create — register a prospective client as a lead for multi-stage
+  conversion funnels."
+icon: "user-plus"
+---
+
+Registers prospective clients as "Leads" rather than fully-onboarded program
+users. Useful for multi-stage conversion funnels.
+
+**Method:** `public.leads.create`
+
+## Request parameters
+
+<ParamField body="client_id" type="string" required>
+  Your company client identifier.
+</ParamField>
+
+<ParamField body="client_secret" type="string" required>
+  Your company client secret.
+</ParamField>
+
+<ParamField body="partner_id" type="string" required>
+  Your company's internal partner identifier.
+</ParamField>
+
+<ParamField body="token" type="string" required>
+  Signed authorization JWT. See [JWT generation](/scripts/jwt-generation).
+</ParamField>
+
+<ParamField body="name" type="string" required>
+  Lead's full name.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Lead's email address.
+</ParamField>
+
+<ParamField body="phone" type="string" required>
+  Lead's phone number in E.164 format.
+</ParamField>
+
+<ParamField body="timezone" type="string" required>
+  Lead's timezone in IANA format (e.g., `"America/New_York"`).
+</ParamField>
+
+<ParamField body="start_date" type="string" required>
+  ISO 8601 start date for the lead's intended program window.
+</ParamField>
+
+<ParamField body="end_date" type="string" required>
+  ISO 8601 end date for the lead's intended program window.
+</ParamField>
+
+<ParamField body="next_action" type="object">
+  Optional next-action configuration object.
+</ParamField>
+
+<ParamField body="data" type="object">
+  Additional lead profile fields.
+
+  <Expandable title="data fields">
+    <ParamField body="first_name" type="string">First name.</ParamField>
+    <ParamField body="last_name" type="string">Last name.</ParamField>
+    <ParamField body="date_of_birth" type="string">Date of birth in `YYYY-MM-DD` format.</ParamField>
+    <ParamField body="gender" type="string">Accepted values: `"female"` | `"male"` | `"na"` | `null`</ParamField>
+    <ParamField body="state" type="string">Two-letter US state code.</ParamField>
+    <ParamField body="zip_code" type="string">ZIP code.</ParamField>
+  </Expandable>
+</ParamField>
+
+<Expandable title="Full request example">
+  ```json
+  {
+    "id": 14,
+    "meta": {
+      "version": [10, 1]
+    },
+    "method": "public.leads.create",
+    "params": {
+      "client_id": "test_client_id",
+      "client_secret": "AM300x9zULYfBLQTRICC",
+      "partner_id": "some_partner_id",
+      "token": "eyJ0eXAi0iJKV1QiLCJhbGci0iJSUzI1NiJ9.eyJ1c2VyX21kIjou_UKqPkI",
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "phone": "+1XXXXXXX",
+      "timezone": "America/New_York",
+      "next_action": {},
+      "start_date": "2026-05-12T12:00Z",
+      "end_date": "2026-05-12T20:00Z",
+      "data": {
+        "first_name": "John",
+        "last_name": "Doe",
+        "date_of_birth": "1990-01-01",
+        "gender": "male",
+        "state": "CA",
+        "zip_code": "90210",
+        "some_value": "This is some value",
+        "other_value": "42",
+        "please_fill_this": null
+      }
+    }
+  }
+  ```
+</Expandable>

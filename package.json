@@ -1,0 +1,21 @@
+{
+  "name": "yourcoach-integration-docs",
+  "version": "1.74",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write '**/*.{mdx,json}'",
+    "format:check": "prettier --check '**/*.{mdx,json}'",
+    "links": "mint links",
+    "dev": "mint dev",
+    "changeset": "pnpx @changesets/cli",
+    "bump-version": "pnpx @changesets/cli version"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.17.1",
+  "devDependencies": {
+    "prettier": "3.8.3"
+  }
+}

@@ -1,0 +1,175 @@
+---
+title: "Native app WebView"
+sidebarTitle: "WebView"
+description:
+  "Configure iOS WKWebView and Android WebView to host the YourCoach widget
+  inside a native application."
+icon: "mobile"
+---
+
+To embed the YourCoach widget inside a native iOS or Android app, host it inside
+a system WebView — `WKWebView` on iOS, `WebView` on Android. The widget is a
+standard web page and behaves identically to the
+[iFrame embed](/widget/integration) once the WebView is correctly configured.
+
+Configure the WebView before the layout loads, then point it at the appropriate
+environment URL (see [Widget integration](/widget/integration) for staging vs
+production URLs). The postMessage handshake and cross-window event protocol work
+the same way as in a browser — see [Handling widget events](/widget/events) for
+the listener pattern.
+
+## Platform settings
+
+<Tabs>
+  <Tab title="iOS (WKWebView)">
+    ### Configure WKWebViewConfiguration
+
+    Instantiate and configure a custom `WKWebViewConfiguration` to allow inline media playback without triggering standard Safari browser UI overrides:
+
+    ```swift
+    let webConfiguration = WKWebViewConfiguration()
+    webConfiguration.allowsInlineMediaPlayback = true
+    webConfiguration.mediaTypesRequiringUserActionForPlayback = []
+
+    // Configure the WebView before layout load
+    let webView = WKWebView(frame: .zero, configuration: webConfiguration)
+    ```
+
+    ### Disable background scrolling
+
+    Disable background scrolling to maintain 100% full-screen responsive layout:
+
+    ```swift
+    webView.scrollView.isScrollEnabled = false
+    ```
+
+    ### Disable pinch-to-zoom
+
+    Disable the pinch-to-zoom accessibility gesture:
+
+    ```swift
+    func scrollViewWillBeginZooming(_ scrollView: UIScrollView, with view: UIView?) {
+      if parent.needRemoveZoom {
+        zoomScale = scrollView.zoomScale
+        scrollView.pinchGestureRecognizer?.isEnabled = false
+      }
+    }
+
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+      if let originalScale = zoomScale {
+        scrollView.zoomScale = originalScale
+      }
+    }
+    ```
+
+    ### Prevent keyboard viewport distortion
+
+    Prevent keyboard frame adjustments from distorting the viewport height:
+
+    ```swift
+    NotificationCenter.default.removeObserver(webView, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    NotificationCenter.default.removeObserver(webView, name: UIResponder.keyboardWillShowNotification, object: nil)
+    NotificationCenter.default.removeObserver(webView, name: UIResponder.keyboardWillHideNotification, object: nil)
+    ```
+
+    ### Info.plist permissions
+
+    Declare hardware usage authorization strings inside your `Info.plist`:
+
+    ```xml
+    <key>NSCameraUsageDescription</key>
+    <string>This app requires camera access to allow you to conduct face-to-face video calls with your health coach.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app requires microphone access to enable audio communications during coaching calls.</string>
+    ```
+
+    ### External URL handling
+
+    Force outbound URLs to open outside the WebView wrapper:
+
+    ```swift
+    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+      if navigationAction.targetFrame == nil, let url = navigationAction.request.url {
+        // openUrlOnANewScreen(url)
+        return nil
+      }
+      return nil
+    }
+    ```
+
+  </Tab>
+  <Tab title="Android (WebView)">
+    ### WebView settings
+
+    Apply settings parameters to the target layout component:
+
+    ```java
+    WebView myWebView = (WebView) findViewById(R.id.webview);
+    WebSettings webSettings = myWebView.getSettings();
+    webSettings.setJavaScriptEnabled(true);
+    webSettings.setSupportZoom(false);
+    webSettings.allowFileAccess = true;
+    webSettings.setDomStorageEnabled(true);
+    webSettings.mediaPlaybackRequiresUserGesture = false;
+    ```
+
+    ### AndroidManifest.xml permissions
+
+    Request native platform permissions inside `AndroidManifest.xml`:
+
+    ```xml
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    ```
+
+    ### External URL handling
+
+    Ensure outbound navigation triggers open inside a distinct Activity wrapper:
+
+    ```java
+    webView.setWebChromeClient(new WebChromeClient() {
+      @Override
+      public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
+        WebView.HitTestResult result = view.getHitTestResult();
+        String url = result.getExtra();
+        Intent intent = new Intent(view.getContext(), NewWebViewActivity.class);
+        intent.putExtra("url", url);
+        view.getContext().startActivity(intent);
+        return false;
+      }
+    });
+    ```
+
+    ### File attachment handling
+
+    Handle file attachments via the device system dialogue.
+
+    <Note>
+      Supported MIME types inside the YourCoach engine: `image/jpeg`, `image/png`, `text/plain`, `.doc`, `.docx`, `.xls`, `.xlsx`, `.ppt`, `.pptx`, `application/pdf`
+    </Note>
+
+    ```java
+    webView.setWebChromeClient(new WebChromeClient() {
+      // Setup interface for Android 5.0+
+      public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> filePath, WebChromeClient.FileChooserParams fileChooserParams) {
+        if (mFilePathCallback != null) {
+          mFilePathCallback.onReceiveValue(null);
+        }
+        mFilePathCallback = filePath;
+
+        Intent intent = fileChooserParams.createIntent();
+        try {
+          startActivityForResult(intent, REQUEST_CODE);
+        } catch (ActivityNotFoundException e) {
+          mFilePathCallback = null;
+          Toast.makeText(getApplicationContext(), "Cannot open file chooser", Toast.LENGTH_LONG).show();
+          return false;
+        }
+        return true;
+      }
+    });
+    ```
+
+  </Tab>
+</Tabs>

@@ -1,0 +1,273 @@
+---
+title: "Widget integration"
+sidebarTitle: "Integration"
+description:
+  "Embed the YourCoach widget iFrame and initialize it with the correct
+  environment URL and user payload."
+icon: "code"
+---
+
+To integrate the YourCoach widget, embed the iFrame in your host page, then
+initialize it with the correct environment URL and user authorization payload
+once it finishes loading.
+
+## Embed the iFrame
+
+<Note>
+  Set `allow="camera; microphone; fullscreen"` on the iFrame element. Without
+  this, video call functionality will not work in the browser.
+</Note>
+
+```html
+<iframe
+  src="https://widget.yourcoach.health"
+  width="100%"
+  height="100%"
+  style="border: none;"
+  id="ych-widget"
+  allow="camera; microphone; fullscreen"
+></iframe>
+```
+
+## Initialize the widget
+
+Select your target environment, then pick the user flow. The `WIDGET_URL`
+constant in the code reflects your selection.
+
+<Tip>
+  The 100 ms delay inside `iframe.onload` ensures browser compatibility,
+  particularly on Safari.
+</Tip>
+
+<Tabs>
+  <Tab title="Staging">
+    Use `https://widget.rc.yourcoach.health` for development and pre-production testing.
+
+    <Tabs>
+      <Tab title="Signup">
+        ```js
+        const iframe = document.getElementById('ych-widget');
+        const WIDGET_URL = 'https://widget.rc.yourcoach.health';
+
+        const sendMessageToWidget = data => {
+          iframe.contentWindow?.postMessage(data, WIDGET_URL);
+        };
+
+        iframe.onload = function () {
+          setTimeout(() => {
+            sendMessageToWidget({
+              type: 'SIGNUP',
+              payload: {
+                api: 'core',
+                clientId: 'client_id',
+                clientSecret: 'client_secret',
+                token: 'token',
+                appId: 'app_id',
+                userInfo: {
+                  partnerId: 'partner_id',
+                  populationIds: ['dei_ppl', 'african_american_ppl'],
+                  demographics: {
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    email: 'john.doe@example.com',
+                    phone: '+1234567890',
+                    state: 'CA',
+                    zipcode: '12345',
+                    dateOfBirth: '1990-01-01',
+                    gender: 'male'
+                  },
+                  additionalData: [
+                    {
+                      question: "How ready are you to make changes to your health?",
+                      answer: "Very"
+                    }
+                  ]
+                }
+              }
+            });
+          }, 100);
+        };
+        ```
+      </Tab>
+      <Tab title="Login">
+        ```js
+        const iframe = document.getElementById('ych-widget');
+        const WIDGET_URL = 'https://widget.rc.yourcoach.health';
+
+        const sendMessageToWidget = data => {
+          iframe.contentWindow?.postMessage(data, WIDGET_URL);
+        };
+
+        iframe.onload = function () {
+          setTimeout(() => {
+            sendMessageToWidget({
+              type: 'LOGIN',
+              payload: {
+                api: 'core',
+                clientId: 'client_id',
+                clientSecret: 'client_secret',
+                token: 'token',
+                appId: 'app_id'
+              }
+            });
+          }, 100);
+        };
+        ```
+      </Tab>
+    </Tabs>
+
+  </Tab>
+  <Tab title="Production">
+    Use `https://widget.yourcoach.health` for live production traffic.
+
+    <Tabs>
+      <Tab title="Signup">
+        ```js
+        const iframe = document.getElementById('ych-widget');
+        const WIDGET_URL = 'https://widget.yourcoach.health';
+
+        const sendMessageToWidget = data => {
+          iframe.contentWindow?.postMessage(data, WIDGET_URL);
+        };
+
+        iframe.onload = function () {
+          setTimeout(() => {
+            sendMessageToWidget({
+              type: 'SIGNUP',
+              payload: {
+                api: 'core',
+                clientId: 'client_id',
+                clientSecret: 'client_secret',
+                token: 'token',
+                appId: 'app_id',
+                userInfo: {
+                  partnerId: 'partner_id',
+                  populationIds: ['dei_ppl', 'african_american_ppl'],
+                  demographics: {
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    email: 'john.doe@example.com',
+                    phone: '+1234567890',
+                    state: 'CA',
+                    zipcode: '12345',
+                    dateOfBirth: '1990-01-01',
+                    gender: 'male'
+                  },
+                  additionalData: [
+                    {
+                      question: "How ready are you to make changes to your health?",
+                      answer: "Very"
+                    }
+                  ]
+                }
+              }
+            });
+          }, 100);
+        };
+        ```
+      </Tab>
+      <Tab title="Login">
+        ```js
+        const iframe = document.getElementById('ych-widget');
+        const WIDGET_URL = 'https://widget.yourcoach.health';
+
+        const sendMessageToWidget = data => {
+          iframe.contentWindow?.postMessage(data, WIDGET_URL);
+        };
+
+        iframe.onload = function () {
+          setTimeout(() => {
+            sendMessageToWidget({
+              type: 'LOGIN',
+              payload: {
+                api: 'core',
+                clientId: 'client_id',
+                clientSecret: 'client_secret',
+                token: 'token',
+                appId: 'app_id'
+              }
+            });
+          }, 100);
+        };
+        ```
+      </Tab>
+    </Tabs>
+
+  </Tab>
+</Tabs>
+
+## Payload parameters
+
+Full TypeScript types:
+[`WidgetApiSignupParams`](/api-reference/widget-messages#widgetapisignupparams)
+· [`WidgetApiLoginParams`](/api-reference/widget-messages#widgetapiloginparams)
+· [`ExternalAuthUserInfo`](/api-reference/widget-messages#externalauthUserInfo)
+
+### Common fields
+
+<ParamField body="api" type="string" required>
+  API target. Always `"core"`.
+</ParamField>
+
+<ParamField body="clientId" type="string" required>
+  Your company client identifier provided by YourCoach.
+</ParamField>
+
+<ParamField body="clientSecret" type="string" required>
+  Your company client secret provided by YourCoach.
+</ParamField>
+
+<ParamField body="token" type="string" required>
+  Signed authorization JWT for the current user. See [JWT
+  generation](/scripts/jwt-generation).
+</ParamField>
+
+<ParamField body="appId" type="string">
+  Optional app identifier for multi-app setups.
+</ParamField>
+
+### Signup-only fields
+
+<ParamField body="userInfo.partnerId" type="string" required>
+  Your company's internal user identifier.
+</ParamField>
+
+<ParamField body="userInfo.populationIds" type="string[]">
+  Optional list of population segment identifiers.
+</ParamField>
+
+<ParamField body="userInfo.demographics.firstName" type="string" required>
+  User's first name.
+</ParamField>
+
+<ParamField body="userInfo.demographics.lastName" type="string" required>
+  User's last name.
+</ParamField>
+
+<ParamField body="userInfo.demographics.email" type="string" required>
+  User's email address.
+</ParamField>
+
+<ParamField body="userInfo.demographics.dateOfBirth" type="string" required>
+  Date of birth in `YYYY-MM-DD` format.
+</ParamField>
+
+<ParamField body="userInfo.demographics.gender" type="string" required>
+  Accepted values: `"male"` | `"female"` | `"na"` | `null`
+</ParamField>
+
+<ParamField body="userInfo.demographics.phone" type="string">
+  Optional phone number in E.164 format.
+</ParamField>
+
+<ParamField body="userInfo.demographics.state" type="string">
+  Optional two-letter US state code.
+</ParamField>
+
+<ParamField body="userInfo.demographics.zipcode" type="string">
+  Optional ZIP code.
+</ParamField>
+
+<ParamField body="userInfo.additionalData" type="object[]">
+  Optional array of question/answer pairs for coach-matching intake.
+</ParamField>
